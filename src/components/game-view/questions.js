@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+import he from 'he';
 
 import { BooleanSelect, MultiSelect } from '../answer/answerSelect';
 
@@ -10,7 +10,7 @@ const Questions = props => {
 
   return (
     <>
-      <div className="question-box">{_.unescape(question.question)}</div>
+      <div className="question-box">{he.decode(question.question)}</div>
       {qIndex + 1} of 10
       <br />
       {question.type === "boolean" ? <BooleanSelect handleClick={handleClick} />

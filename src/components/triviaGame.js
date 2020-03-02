@@ -8,7 +8,7 @@ class TriviaGame extends React.Component {
   defaultState = {
     gameStatus: 0,
     gameScore: 0,
-    questions: ["0"],
+    questions: [],
     answers: [],
     qIndex: 0,
     qType: 'boolean',
@@ -39,7 +39,7 @@ class TriviaGame extends React.Component {
 
   handleGameStart(e) {
     e.preventDefault();
-    const { qDifficulty, qType} = this.state;
+    const { qDifficulty, qType } = this.state;
     const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}&type=${qType}`;
     try {
       fetch(BASE_URL)
@@ -74,7 +74,6 @@ class TriviaGame extends React.Component {
         answers: tempAnswer,
         gameScore: tempAnswer[qIndex] === 1 ? gameScore + 1 : gameScore});
     } else {
-      console.log("The answers", tempAnswer)
       this.setState({ gameStatus: 2, 
         answers: tempAnswer,
         gameScore: tempAnswer[qIndex] === 1 ? gameScore + 1 : gameScore });
