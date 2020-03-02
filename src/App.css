@@ -28,6 +28,18 @@
   color: #61dafb;
 }
 
+.answer-correct {
+  border: 2px solid green; 
+}
+
+.answer-wrong {
+  border: 1px solid red; 
+}
+
+.answer-subtext {
+  color: grey;
+}
+
 .game-wrapper {
   border: 1px solid black;
 }

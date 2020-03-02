@@ -1,126 +1,118 @@
 import React from 'react';
 
+import TriviaSummary from './game-view/triviaSummary';
+import StartScreen from './game-view/startScreen';
+import Questions from './game-view/questions';
+
 class TriviaGame extends React.Component {
+  defaultState = {
+    gameStatus: 0,
+    gameScore: 0,
+    questions: ["0"],
+    answers: [],
+    qIndex: 0,
+    qType: 'boolean',
+    qDifficulty: 'hard'
+  }
+
   constructor() {
     super();
-    this.state = {
-      gameStatus: 0,
-      gameScore: 0,
-      questionCategory: 'Welcome to the Trivia Challenge!',
-      questions: ["0"],
-      answers: [],
-      qIndex: 0,
-      questionType: 'boolean',
-      qDifficulty: 'hard',
-    }
+    this.state = this.defaultState;
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleGameStart = this.handleGameStart.bind(this);
     this.handleGameHeader = this.handleGameHeader.bind(this);
     this.handleGameButtons = this.handleGameButtons.bind(this);
+    this.handleRestart = this.handleRestart.bind(this);
   }
 
   handleGameHeader() {
-    const { gameStatus, questionCategory, gameScore } = this.state;
-    if (gameStatus === 0 || gameStatus === 1) {
-      return (<h3>{questionCategory}</h3>);
-    }
-    else {
+    const { gameStatus, questions, gameScore, qIndex } = this.state;
+    if (gameStatus === 0) {
+      return (<h3>Welcome to the Trivia Challenge!</h3>);
+    } else if (gameStatus === 1) {
+      return (<h3>{questions[qIndex].category}</h3>);
+    } else {
       return (<h3>You scored {gameScore}/10</h3>);
     } 
+  }
+
+
+  handleGameStart(e) {
+    e.preventDefault();
+    const { qDifficulty, qType} = this.state;
+    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}&type=${qType}`;
+    try {
+      fetch(BASE_URL)
+        .then(res => res.json())
+        .then(data => {
+          this.setState({
+            gameStatus: 1,
+            questions: data.results,
+          })
+        });
+      }
+    catch(error) {
+      alert("An error has occured fetching questions: ", error);
+    }
   }
 
   handleGameButtons(e) {
     e.preventDefault();
     const value = e.target.value;
-    const { qIndex, answers } = this.state;
-    var tempAnswer = answers;
-    tempAnswer.push(value);
+    const { qIndex, answers, questions, gameScore } = this.state;
 
-    if (qIndex <= 9) {
-      this.setState({
-        qIndex: qIndex + 1, 
-        answers: tempAnswer });
-      return;
+    var tempAnswer = answers;
+    if (questions[qIndex].correct_answer === value) {
+      tempAnswer.push(1);
+    } else {
+      tempAnswer.push(0);
     }
 
-    this.setState({ gameStatus: 2 })
+    if (qIndex !== 9) {
+      this.setState({
+        qIndex: qIndex + 1, 
+        answers: tempAnswer,
+        gameScore: tempAnswer[qIndex] === 1 ? gameScore + 1 : gameScore});
+    } else {
+      console.log("The answers", tempAnswer)
+      this.setState({ gameStatus: 2, 
+        answers: tempAnswer,
+        gameScore: tempAnswer[qIndex] === 1 ? gameScore + 1 : gameScore });
+    }
+  }
+
+  handleGameBox() {
+    const { gameStatus, questions , qIndex, answers, gameScore } = this.state;
+
+    if (gameStatus === 0) {
+      return <StartScreen handleClick={this.handleGameStart} />;
+    } else if (gameStatus === 1) {
+      return <Questions question={questions[qIndex]} 
+                qIndex={qIndex} 
+                handleClick={this.handleGameButtons} />;
+    } else {
+      return <TriviaSummary questions={questions} 
+                answers={answers} 
+                score={gameScore} 
+                handleRestart={this.handleRestart}/>;
+    }
+  }
+
+  handleRestart(e) {
+    e.preventDefault();
+    this.setState({...this.defaultState});
     return;
   }
 
-  handleClick(e) {
-    e.preventDefault();
-    const { qDifficulty, questionType} = this.state;
-    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}&type=${questionType}`;
-
-    fetch(BASE_URL)
-      .then(res => res.json())
-      .then(data => {
-        console.log("My data: ", data);
-        this.setState({
-          gameStatus: 1,
-          questions: data.results,
-        })
-      });
-  }
-
   render() {
-    const { gameStatus, questions , qIndex } = this.state;
     return (
       <div>
         {this.handleGameHeader()}
         <br />
-        {gameStatus === 0 ? <PreGame handleClick={this.handleClick}/> 
-          : <Question question={questions[qIndex]} 
-                      qIndex={qIndex} 
-                      handleClick={this.handleGameButtons} />}
+        {this.handleGameBox()}
       </div>
     )
   }
 };
 
 export default TriviaGame;
-
-
-export const PreGame = props => {
-  const { handleClick } = props;
-  return (
-    <>
-      <p>You will be presented with 10 True of False questions </p>
-        <br />        
-      <p>Can you score 100%!?</p>
-      <br />
-      <button type="button" onClick={handleClick}>Begin</button>
-    </>
-  )
-};
-
-export const Question = props => {
-  const { question, qIndex, handleClick } = props;
-  return (
-    <>
-      <div className="question-box">{question.question}</div>
-      {qIndex +1} of 10
-      <br />
-      <BooleanSelect handleClick={handleClick} />
-    </>
-  )
-};
-
-export const BooleanSelect = props => {
-  const { handleClick } = props;
-  return (
-    <div className="bool-select">
-      <button type="submit" value="true" onClick={handleClick}>True</button>
-      <button type="submit" value="false" onClick={handleClick}>False</button>
-    </div>
-  )
-};
-
-export const triviaSummary = props => {
-  const { questions, answers } = props;
-  return (
-    <div className="answer-block">
-      {questions.map((question) => <div>{question.question}</div>)}
-    </div>
-  )
-};
