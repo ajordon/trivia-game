@@ -2,19 +2,9 @@ import React from 'react';
 
 import TriviaSummary from './game-view/triviaSummary';
 import StartScreen from './game-view/startScreen';
-import Questions from './game-view/questions';
+import QuestionsBox from './game-view/questionsBox';
 
 class TriviaGame extends React.Component {
-  defaultState = {
-    gameStatus: 0,
-    gameScore: 0,
-    questions: [],
-    answers: [],
-    qIndex: 0,
-    qType: 'boolean',
-    qDifficulty: 'hard'
-  }
-
   constructor() {
     super();
     this.state = {
@@ -23,7 +13,7 @@ class TriviaGame extends React.Component {
       questions: [],
       answers: [],
       qIndex: 0,
-      qType: 'boolean',
+      qType: 'boolean', 
       qDifficulty: 'hard'
     }
 
@@ -49,7 +39,7 @@ class TriviaGame extends React.Component {
   handleScoreGrade(score) {
     if (score < 4){
       return "Better luck next time...";
-    } else if (score  < 6) {
+    } else if (score  <= 6) {
       return "Not Bad!";
     } else {
       return "Your a Genius!";
@@ -58,8 +48,8 @@ class TriviaGame extends React.Component {
 
   handleGameStart(e) {
     e.preventDefault();
-    const { qDifficulty } = this.state;
-    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}`;
+    const { qDifficulty, qType } = this.state;
+    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}&type=${qType}`;
     try {
       fetch(BASE_URL)
         .then(res => res.json())
@@ -67,9 +57,9 @@ class TriviaGame extends React.Component {
           this.setState({
             gameStatus: 1,
             questions: data.results,
-          })
-        });
-      }
+        })
+      });
+    }
     catch(error) {
       alert("An error has occured fetching questions: ", error);
     }
@@ -105,7 +95,7 @@ class TriviaGame extends React.Component {
     if (gameStatus === 0) {
       return <StartScreen handleClick={this.handleGameStart} />;
     } else if (gameStatus === 1) {
-      return <Questions question={questions[qIndex]} 
+      return <QuestionsBox question={questions[qIndex]} 
                 qIndex={qIndex} 
                 handleClick={this.handleGameButtons} />;
     } else {

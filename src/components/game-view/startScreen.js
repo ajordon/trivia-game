@@ -4,7 +4,7 @@ const StartScreen = props => {
   const { handleClick } = props;
   return (
     <>
-      <p>You will be presented with 10 questions</p>
+      <p>You will be presented with 10 True or False questions</p>
       <br />        
       <p>Can you score 100%?</p>
       <br />

@@ -1,8 +1,8 @@
 import React from 'react';
 import he from 'he';
-import { BooleanSelect, MultiSelect } from '../answer/answerSelect';
+import { BooleanSelect, MultiSelect } from './answer-box/answerSelect';
 
-const Questions = props => {
+const QuestionsBox = props => {
   const { question, qIndex, handleClick } = props;
   var options = question.incorrect_answers;
   options.push(question.correct_answer);  
@@ -18,4 +18,4 @@ const Questions = props => {
   )
 };
 
-export default Questions;
+export default QuestionsBox;
