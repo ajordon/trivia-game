@@ -27,7 +27,7 @@ class TriviaSummary extends React.Component {
             <p className="answer-subtext">Correct Answer: {question.correct_answer}</p>
           </div>)}
         <br />
-        <button type="submit" onClick={handleRestart}>Play Again?</button>
+        <button className="begin-btn" type="submit" onClick={handleRestart}>Play Again?</button>
       </div>
     )}
 };

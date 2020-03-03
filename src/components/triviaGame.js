@@ -17,12 +17,21 @@ class TriviaGame extends React.Component {
 
   constructor() {
     super();
-    this.state = this.defaultState;
+    this.state = {
+      gameStatus: 0,
+      gameScore: 0,
+      questions: [],
+      answers: [],
+      qIndex: 0,
+      qType: 'boolean',
+      qDifficulty: 'hard'
+    }
 
     this.handleGameStart = this.handleGameStart.bind(this);
     this.handleGameHeader = this.handleGameHeader.bind(this);
     this.handleGameButtons = this.handleGameButtons.bind(this);
     this.handleRestart = this.handleRestart.bind(this);
+    this.handleScoreGrade = this.handleScoreGrade.bind(this);
   }
 
   handleGameHeader() {
@@ -32,15 +41,25 @@ class TriviaGame extends React.Component {
     } else if (gameStatus === 1) {
       return (<h3>{questions[qIndex].category}</h3>);
     } else {
-      return (<h3>You scored {gameScore}/10</h3>);
+      return (<h3>{this.handleScoreGrade(gameScore)}
+        <br />You scored {gameScore}/10</h3>);
     } 
   }
 
+  handleScoreGrade(score) {
+    if (score < 4){
+      return "Better luck next time...";
+    } else if (score  < 6) {
+      return "Not Bad!";
+    } else {
+      return "Your a Genius!";
+    }
+  }
 
   handleGameStart(e) {
     e.preventDefault();
-    const { qDifficulty, qType } = this.state;
-    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}&type=${qType}`;
+    const { qDifficulty } = this.state;
+    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}`;
     try {
       fetch(BASE_URL)
         .then(res => res.json())
@@ -93,23 +112,29 @@ class TriviaGame extends React.Component {
       return <TriviaSummary questions={questions} 
                 answers={answers} 
                 score={gameScore} 
-                handleRestart={this.handleRestart}/>;
+                handleRestart={this.handleRestart} />;
     }
   }
 
   handleRestart(e) {
     e.preventDefault();
-    this.setState({...this.defaultState});
-    return;
+    this.setState({
+      gameStatus: 0,
+      gameScore: 0,
+      questions: [],
+      answers: [],
+      qIndex: 0,
+      qType: 'boolean',
+      qDifficulty: 'hard'});
   }
 
   render() {
     return (
-      <div>
+      <>
         {this.handleGameHeader()}
         <br />
         {this.handleGameBox()}
-      </div>
+      </>
     )
   }
 };
