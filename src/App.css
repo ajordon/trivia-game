@@ -1,3 +1,7 @@
+@import url(https://fonts.googleapis.com/css?family=Mr+Dafoe);
+@import url(https://fonts.googleapis.com/css?family=Monoton);
+
+
 .App {
   background-color: #c3bfbf;
   font-family: 'Karla';
@@ -15,6 +19,7 @@
   flex-direction: column;
   font-size: calc(10px + 2vmin);
   justify-content: center;
+  height: 35vh;
 }
 
 .App-logo {
@@ -99,6 +104,12 @@
   margin: 0 auto;
 }
 
+.hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
 .multi-select {
   margin: 1em 0 1em 0;
   display: grid;
@@ -140,4 +151,41 @@
 .wrong {
   background: #ff00000a;
   border: 1px solid #ff000094; 
+}
+
+.game-trivia{
+  position: relative;
+  margin-bottom: 12em;
+}
+
+.game {
+  position: relative;
+  left: -1.2em;
+  top: .7em;
+  font-family: 'Mr Dafoe', cursive;
+  font-size: 6em;
+  color: #EB219B;
+  -webkit-text-fill-color: rgba(253, 90, 250, 1);
+  text-shadow: -2px -2px 0 #FFBAF2;
+  -webkit-filter: drop-shadow(3px 3px 1px #441F62);
+  -webkit-transform: skew(-5deg,-5deg);
+  font-weight: normal;
+  z-index: 2;
+  margin-left: 60px;
+  padding-left: 50px;
+  padding-right: 70px;
+}
+
+.trivia {
+  position: relative;
+  font-family: 'Monoton', cursive;
+  font-size: 5em;
+  line-height: 1;
+  margin: 0;
+  margin-top: -95px; 
+  padding-left: 80px;
+  background-image: -webkit-linear-gradient(#022486 0%, #0AD0FD 30%, #BDFCFC 40%, #D8FFFF 44%, #00081C 44%, #00081C 50%, #074A67 52%, #1CD8FE 60%, #7FEDFE 62%, #96F5FC 70%, #0FD8FA 73%, #0BD2FD 88%, #AFFDFF 100%); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #fff;
 }
