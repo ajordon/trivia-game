@@ -1,7 +1,7 @@
 import React from 'react';
 import he from 'he';
 
-export const BooleanSelect = props => {
+const BooleanSelect = props => {
   const { handleClick } = props;
   return (
     <div className="bool-select">
@@ -11,12 +11,14 @@ export const BooleanSelect = props => {
   )
 };
 
-export const MultiSelect = props => {
+const MultiSelect = props => {
   const { options, handleClick } = props;
-  return(
+  return (
     <div className="multi-select">
       {options.map((option, i) => 
         <button className="multi-btn" type="submit" value={option} onClick={handleClick} key={i}>{he.decode(option)}</button>)}
     </div>
   )
 };
+
+export { BooleanSelect, MultiSelect };

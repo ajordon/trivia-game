@@ -1,5 +1,4 @@
 import React from 'react';
-
 import TriviaSummary from './game-view/triviaSummary';
 import StartScreen from './game-view/startScreen';
 import QuestionsBox from './game-view/questionsBox';
