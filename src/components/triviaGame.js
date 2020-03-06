@@ -3,6 +3,7 @@ import React from 'react';
 import TriviaSummary from './game-view/triviaSummary';
 import StartScreen from './game-view/startScreen';
 import QuestionsBox from './game-view/questionsBox';
+import DifficultySelect from './game-view/difficultySelect';
 
 class TriviaGame extends React.Component {
   constructor() {
@@ -22,18 +23,28 @@ class TriviaGame extends React.Component {
     this.handleGameButtons = this.handleGameButtons.bind(this);
     this.handleRestart = this.handleRestart.bind(this);
     this.handleScoreGrade = this.handleScoreGrade.bind(this);
+    this.handleDifficultyChange = this.handleDifficultyChange.bind(this);
   }
 
   handleGameHeader() {
-    const { gameStatus, questions, gameScore, qIndex } = this.state;
+    const { gameStatus, questions, gameScore, qIndex, qDifficulty } = this.state;
     if (gameStatus === 0) {
-      return (<h3>Welcome to the Trivia Challenge!</h3>);
+      return (<div>
+        <h3>Welcome to the Trivia Challenge!</h3>
+        <label>Select Your Difficulty: 
+          <DifficultySelect selected={qDifficulty} handleDiffSelect={this.handleDifficultyChange} /> 
+        </label>  
+      </div>);
     } else if (gameStatus === 1) {
-      return (<h3>{questions[qIndex].category}</h3>);
+      return (<h3>{questions ? questions[qIndex].category : '' }</h3>);
     } else {
       return (<h3>{this.handleScoreGrade(gameScore)}
         <br />You scored {gameScore}/10</h3>);
     } 
+  }
+
+  handleDifficultyChange(e) {
+    this.setState({ qDifficulty: e.target.value });
   }
 
   handleScoreGrade(score) {
@@ -48,8 +59,8 @@ class TriviaGame extends React.Component {
 
   handleGameStart(e) {
     e.preventDefault();
-    const { qDifficulty, qType } = this.state;
-    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}&type=${qType}`;
+    const { qDifficulty } = this.state;
+    const BASE_URL = `https://opentdb.com/api.php?amount=10&difficulty=${qDifficulty}`;
     try {
       fetch(BASE_URL)
         .then(res => res.json())
@@ -71,7 +82,7 @@ class TriviaGame extends React.Component {
     const { qIndex, answers, questions, gameScore } = this.state;
 
     var tempAnswer = answers;
-    if (questions[qIndex].correct_answer === value) {
+    if (questions && questions[qIndex].correct_answer === value) {
       tempAnswer.push(1);
     } else {
       tempAnswer.push(0);
