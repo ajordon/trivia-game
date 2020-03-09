@@ -1,8 +1,9 @@
 import React from 'react';
-import TriviaSummary from './game-view/triviaSummary';
-import StartScreen from './game-view/startScreen';
-import QuestionsBox from './game-view/questionsBox';
-import DifficultySelect from './game-view/difficultySelect';
+import TriviaSummary from './game-views/triviaSummary';
+import StartScreen from './game-views/startScreen';
+import QuestionsBox from './game-views/questionsBox';
+import DifficultySelect from './game-views/difficultySelect';
+import chooseDisplayText from './helpers/helpers';
 
 class TriviaGame extends React.Component {
   constructor() {
@@ -16,12 +17,12 @@ class TriviaGame extends React.Component {
       qType: 'boolean', 
       qDifficulty: 'hard'
     }
+    this.baseState = this.state;
 
     this.handleGameStart = this.handleGameStart.bind(this);
     this.handleGameHeader = this.handleGameHeader.bind(this);
     this.handleGameButtons = this.handleGameButtons.bind(this);
     this.handleRestart = this.handleRestart.bind(this);
-    this.handleScoreGrade = this.handleScoreGrade.bind(this);
     this.handleDifficultyChange = this.handleDifficultyChange.bind(this);
   }
 
@@ -37,23 +38,13 @@ class TriviaGame extends React.Component {
     } else if (gameStatus === 1) {
       return (<h3>{questions ? questions[qIndex].category : '' }</h3>);
     } else {
-      return (<h3>{this.handleScoreGrade(gameScore)}
+      return (<h3>{() => chooseDisplayText(gameScore)}
         <br />You scored {gameScore}/10</h3>);
     } 
   }
 
   handleDifficultyChange(e) {
     this.setState({ qDifficulty: e.target.value });
-  }
-
-  handleScoreGrade(score) {
-    if (score < 4){
-      return "Better luck next time...";
-    } else if (score  <= 6) {
-      return "Not Bad!";
-    } else {
-      return "Your a Genius!";
-    }
   }
 
   handleGameStart(e) {
@@ -99,9 +90,8 @@ class TriviaGame extends React.Component {
     }
   }
 
-  handleGameBox() {
+  handleGameWrapper() {
     const { gameStatus, questions , qIndex, answers, gameScore } = this.state;
-
     if (gameStatus === 0) {
       return <StartScreen handleClick={this.handleGameStart} />;
     } else if (gameStatus === 1) {
@@ -118,14 +108,7 @@ class TriviaGame extends React.Component {
 
   handleRestart(e) {
     e.preventDefault();
-    this.setState({
-      gameStatus: 0,
-      gameScore: 0,
-      questions: [],
-      answers: [],
-      qIndex: 0,
-      qType: 'boolean',
-      qDifficulty: 'hard'});
+    this.setState(this.baseState);
   }
 
   render() {
@@ -133,7 +116,7 @@ class TriviaGame extends React.Component {
       <>
         {this.handleGameHeader()}
         <br />
-        {this.handleGameBox()}
+        {this.handleGameWrapper()}
       </>
     )
   }

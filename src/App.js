@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import TriviaGame from './components/triviaGame';
+import TriviaGame from './components/game-trivia/triviaGame';
 
 function App() {
   return (

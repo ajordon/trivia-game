@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import TrivaGame from './components/triviaGame';
 import StartScreen from './components/game-view/startScreen';
-import { act } from 'react-dom/test-utils';
 import QuestionsBox from './components/game-view/questionsBox';
 
 describe('renders game start screen', () => {
